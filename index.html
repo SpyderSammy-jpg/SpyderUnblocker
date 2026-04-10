@@ -5,146 +5,290 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Classroom</title>
     <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/classroom/favicon.png">
+    
     <script src="https://elfsightcdn.com/platform.js" async></script>
+    
     <style>
-        :root { --primary-red: #ff0000; --bg-black: #000000; --card-grey: #111111; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-black); color: white; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
-        
-        .container { max-width: 700px; width: 100%; background: var(--card-grey); padding: 40px; border-radius: 12px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); text-align: center; border: 2px solid var(--primary-red); margin-bottom: 30px; }
-        h1 { color: var(--primary-red); text-transform: uppercase; letter-spacing: 2px; margin: 0; }
-        .instructions-box { margin: 25px 0; text-align: left; background: #1a1a1a; padding: 20px; border-radius: 8px; border-left: 5px solid var(--primary-red); font-size: 0.95rem; line-height: 1.5; }
-        
-        form { display: flex; flex-direction: column; gap: 15px; text-align: left; }
-        label { color: var(--primary-red); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; background: black; border: 1px solid #444; border-radius: 4px; color: white; box-sizing: border-box; }
-        input:focus { outline: none; border-color: var(--primary-red); }
-        
-        .btn { background: var(--primary-red); color: white; padding: 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
-        .btn:hover { background: #b30000; }
+        :root {
+            --primary-red: #ff0000;
+            --bg-black: #000000;
+            --card-grey: #111111;
+        }
 
-        /* Loading Overlay */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .spin { width: 50px; height: 50px; border: 5px solid #222; border-top: 5px solid var(--primary-red); border-radius: 50%; animation: spin 1s linear infinite; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-black);
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: var(--card-grey);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            text-align: center;
+            margin-top: 50px;
+            border: 2px solid var(--primary-red);
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 0 0 10px 0;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px #500000;
+        }
+
+        .splash-text {
+            color: #888888;
+            font-size: 1.1rem;
+            margin: 2px 0;
+            font-weight: 500;
+        }
+
+        .instructions-box {
+            margin: 30px 0;
+            line-height: 1.6;
+            font-size: 1rem;
+            text-align: left;
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 6px solid var(--primary-red);
+            color: #cccccc;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+            color: var(--primary-red);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #000000;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            font-size: 1rem;
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .btn {
+            background: var(--primary-red);
+            color: #ffffff;
+            padding: 18px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #cc0000;
+            transform: scale(1.01);
+        }
+
+        /* Loading Screen Overlay */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #222;
+            border-top: 6px solid var(--primary-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Session UI */
-        #session-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; z-index: 9000; background: black; }
+        #session-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 9999;
+            background: black;
+        }
+
         iframe { width: 100%; height: 100%; border: none; }
-        #timer-box { position: fixed; bottom: 20px; left: 20px; background: var(--card-grey); border: 2px solid var(--primary-red); padding: 15px; border-radius: 8px; box-shadow: 0 0 15px rgba(255,0,0,0.5); z-index: 10001; }
-        #timer-box h4 { margin: 0; font-size: 0.8rem; color: var(--primary-red); text-transform: uppercase; }
-        #countdown { font-size: 1.5rem; font-weight: bold; }
+
+        #timer-floater {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--card-grey);
+            border: 2px solid var(--primary-red);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
+            z-index: 10001;
+            text-align: center;
+        }
+
+        #timer-floater h4 { margin: 0 0 5px 0; color: var(--primary-red); font-size: 0.7rem; text-transform: uppercase; }
+        #countdown { font-size: 1.8rem; font-weight: bold; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="main-ui" class="container">
-        <h1>SpyderUnblocker</h1>
-        <p style="color:#888; font-style:italic;">Version 2.0 | Made by SpyderSammyUI</p>
+    <div id="main-content">
+        <div class="container">
+            <h1>SpyderUnblocker</h1>
+            <p class="splash-text">Version 2.0 of the SpyderSammyUI</p>
+            <p class="splash-text">Made by owner of SpyderSammyUI</p>
 
-        <div class="instructions-box">
-            Type your info below for manual requests or use <b>Immediate Access</b> for a temporary session.
+            <div class="instructions-box">
+                Below, type any website’s url and choose your preferences. You will receive a response within 5 days. For immediate access, use the section at the bottom. Reach out to the AI chatbot for help!
+            </div>
+
+            <form id="requestForm">
+                <label>Manual Request URL</label>
+                <input type="text" name="url" placeholder="https://..." required>
+                <label>Your Name</label>
+                <input type="text" name="name" required>
+                <label>Your Email</label>
+                <input type="email" name="email" required>
+                <button type="submit" class="btn" id="saveBtn">Save & Submit Request</button>
+            </form>
+
+            <hr style="border: 1px solid #333; margin: 50px 0;">
+
+            <h2 style="color:var(--primary-red); text-transform: uppercase;">Immediate Access</h2>
+            <form id="immediateForm">
+                <label>Website URL</label>
+                <input type="text" id="targetUrl" placeholder="example.com" required>
+                <label>Your Name</label>
+                <input type="text" id="targetName" placeholder="Your Name" required>
+                <button type="button" class="btn" onclick="triggerImmediate()">Go</button>
+            </form>
         </div>
-
-        <form id="requestForm">
-            <label>Manual Request URL</label>
-            <input type="text" name="url" placeholder="https://..." required>
-            <label>Your Name</label>
-            <input type="text" name="name" required>
-            <label>Your Email</label>
-            <input type="email" name="email" required>
-            <button type="submit" class="btn" id="saveBtn">Save & Submit</button>
-        </form>
-
-        <hr style="border: 1px solid #333; margin: 40px 0;">
-
-        <h2 style="color:var(--primary-red)">Immediate Access</h2>
-        <form id="immediateForm">
-            <label>Target URL</label>
-            <input type="text" id="targetUrl" placeholder="roblox.com" required>
-            <label>Your Name</label>
-            <input type="text" id="targetName" placeholder="Bob" required>
-            <button type="button" class="btn" onclick="startImmediate()">Go</button>
-        </form>
     </div>
 
     <div id="loader">
-        <div class="spin"></div>
-        <p style="color:var(--primary-red); margin-top:20px; letter-spacing:2px;">INITIALIZING SESSION...</p>
+        <div class="spinner"></div>
+        <p style="color:var(--primary-red); margin-top: 20px; font-weight: bold; letter-spacing: 2px;">LOADING SECURE SESSION...</p>
     </div>
 
-    <div id="session-container">
-        <div id="timer-box">
+    <div id="session-view">
+        <div id="timer-floater">
             <h4>Time until session ends:</h4>
             <div id="countdown">60:00</div>
         </div>
-        <iframe id="sessionFrame"></iframe>
+        <iframe id="sessionIframe"></iframe>
     </div>
 
     <div class="elfsight-app-53dd79c3-e75f-455e-ae5c-5e1b4955f86c" data-elfsight-app-lazy></div>
 
     <script>
-        // Handle Manual Request
+        // Manual Request Form Logic
         document.getElementById('requestForm').addEventListener('submit', e => {
             e.preventDefault();
             const btn = document.getElementById('saveBtn');
-            btn.innerText = "SAVING...";
+            btn.innerText = "SENDING...";
             fetch("https://sheetdb.io/api/v1/jvdju561wmg80", {
                 method: "POST",
                 body: new FormData(e.target)
             }).then(() => {
                 e.target.reset();
-                btn.innerText = "Save & Submit";
+                btn.innerText = "Save & Submit Request";
             });
         });
 
-        // Start Immediate Session
-        function startImmediate() {
+        // Immediate Access Logic
+        function triggerImmediate() {
             const name = document.getElementById('targetName').value;
             const site = document.getElementById('targetUrl').value;
             if(!name || !site) return;
-            
-            // Simulates creating a new path via URL params
-            const newUrl = window.location.origin + window.location.pathname + `?user=${name}&site=${site}`;
-            window.history.pushState({}, '', newUrl);
-            
-            runSession(site);
+
+            // Generate "Subtab" URL appearance
+            const newPath = window.location.origin + window.location.pathname + `?user=${name.toLowerCase()}&site=${site}`;
+            window.history.pushState({}, '', newPath);
+
+            startSession(site);
         }
 
-        function runSession(url) {
-            document.getElementById('main-ui').style.display = 'none';
+        function startSession(url) {
+            document.getElementById('main-content').style.display = 'none';
             document.getElementById('loader').style.display = 'flex';
-            
+
             setTimeout(() => {
                 document.getElementById('loader').style.display = 'none';
-                document.getElementById('session-container').style.display = 'block';
+                document.getElementById('session-view').style.display = 'block';
                 
-                // Ensure URL has protocol
-                let finalUrl = url.startsWith('http') ? url : 'https://' + url;
-                document.getElementById('sessionFrame').src = finalUrl;
-                startTimer(60);
+                let formattedUrl = url.startsWith('http') ? url : 'https://' + url;
+                document.getElementById('sessionIframe').src = formattedUrl;
+                
+                runTimer(60);
             }, 3000);
         }
 
-        function startTimer(minutes) {
-            let seconds = minutes * 60;
+        function runTimer(minutes) {
+            let time = minutes * 60;
             const display = document.getElementById('countdown');
-            const interval = setInterval(() => {
-                let mins = Math.floor(seconds / 60);
-                let secs = seconds % 60;
-                display.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            const countdownInterval = setInterval(() => {
+                const mins = Math.floor(time / 60);
+                let secs = time % 60;
+                secs = secs < 10 ? '0' + secs : secs;
+                display.innerHTML = `${mins}:${secs}`;
                 
-                if (--seconds < 0) {
-                    clearInterval(interval);
+                if (time <= 0) {
+                    clearInterval(countdownInterval);
                     window.location.href = "https://classroom.google.com";
                 }
+                time--;
             }, 1000);
         }
 
-        // Check if coming from a "Go" redirect on load
+        // On Load Check
         window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            if(params.has('site')) {
-                runSession(params.get('site'));
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.has('site')) {
+                startSession(urlParams.get('site'));
             }
         };
     </script>
