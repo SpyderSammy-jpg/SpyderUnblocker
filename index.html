@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Classroom</title>
+    <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/classroom/favicon.png">
+    
     <script src="https://elfsightcdn.com/platform.js" async></script>
+    
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000000; /* Pure Black */
+            color: #ffffff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -21,26 +24,26 @@
         .container {
             max-width: 700px;
             width: 100%;
-            background: #1e293b;
+            background: #111111; /* Very Dark Grey */
             padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2); /* Red Glow */
             text-align: center;
             margin-top: 50px;
-            border: 1px solid #334155;
+            border: 1px solid #ff0000; /* Red Border */
             margin-bottom: 50px;
         }
 
         h1 {
             font-size: 3.5rem;
             margin: 0 0 5px 0;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ff0000; /* Solid Red */
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .splash-text {
-            color: #94a3b8;
+            color: #bbbbbb;
             font-size: 1.1rem;
             margin: 5px 0;
             font-style: italic;
@@ -51,11 +54,11 @@
             line-height: 1.6;
             font-size: 1rem;
             text-align: left;
-            background: #334155;
+            background: #1a1a1a;
             padding: 25px;
-            border-radius: 12px;
-            border-left: 6px solid #38bdf8;
-            color: #e2e8f0;
+            border-radius: 8px;
+            border-left: 6px solid #ff0000;
+            color: #eeeeee;
         }
 
         form {
@@ -73,8 +76,8 @@
 
         label {
             font-weight: 600;
-            color: #38bdf8;
-            font-size: 0.9rem;
+            color: #ff0000;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -82,9 +85,9 @@
         input {
             width: 100%;
             padding: 14px;
-            background: #0f172a;
-            border: 1px solid #475569;
-            border-radius: 8px;
+            background: #000000;
+            border: 1px solid #444444;
+            border-radius: 4px;
             font-size: 1rem;
             color: white;
             box-sizing: border-box;
@@ -93,33 +96,31 @@
 
         input:focus {
             outline: none;
-            border-color: #38bdf8;
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
         }
 
         .btn-save {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            background: #ff0000;
             color: white;
             padding: 18px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             text-transform: uppercase;
             margin-top: 10px;
         }
 
         .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+            background: #cc0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
         }
 
-        #status-msg {
-            margin-top: 15px;
-            font-size: 0.9rem;
-            text-align: center;
-            font-weight: bold;
+        .btn-save:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -137,26 +138,25 @@
         <form id="unblockForm">
             <div class="form-group">
                 <label>Blocked Website URL</label>
-                <input type="text" name="url" placeholder="https://..." required>
+                <input type="text" name="url" placeholder="Enter URL..." required>
             </div>
 
             <div class="form-group">
                 <label>Your Preferences</label>
-                <input type="text" name="preferences" placeholder="e.g. Proxy mode, fast, etc.">
+                <input type="text" name="preferences" placeholder="e.g. Stealth, Speed, etc.">
             </div>
 
             <div class="form-group">
                 <label>Your Name</label>
-                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="text" name="name" placeholder="Name" required>
             </div>
 
             <div class="form-group">
                 <label>Your Email</label>
-                <input type="email" name="email" placeholder="student@school.org" required>
+                <input type="email" name="email" placeholder="student@jcpsnj.org" required>
             </div>
 
             <button type="submit" class="btn-save" id="saveBtn">Save & Submit Request</button>
-            <div id="status-msg"></div>
         </form>
     </div>
 
@@ -165,12 +165,13 @@
     <script>
         const form = document.getElementById('unblockForm');
         const btn = document.getElementById('saveBtn');
-        const status = document.getElementById('status-msg');
 
         form.addEventListener("submit", e => {
             e.preventDefault();
+            
+            // Change button state visually but no popup message
             btn.disabled = true;
-            btn.innerText = "SAVING TO SHEETS...";
+            btn.innerText = "SENDING...";
 
             fetch("https://sheetdb.io/api/v1/jvdju561wmg80", {
                 method: "POST",
@@ -178,18 +179,11 @@
             })
             .then(response => {
                 if(response.ok) {
-                    status.style.color = "#2ecc71";
-                    status.innerText = "✓ Information saved to Google Sheets!";
-                    alert('Success! Your request has been logged.');
-                    form.reset();
-                } else {
-                    status.style.color = "#e74c3c";
-                    status.innerText = "Error: Check your SheetDB API settings.";
+                    form.reset(); // Just clear the form silently
                 }
             })
             .catch(error => {
-                status.style.color = "#e74c3c";
-                status.innerText = "Connection error. Please try again.";
+                console.error('Error saving data');
             })
             .finally(() => {
                 btn.disabled = false;
