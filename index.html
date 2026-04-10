@@ -191,5 +191,95 @@
             });
         });
     </script>
+<!-- ================= ADMIN SYSTEM ================= -->
+
+<!-- ADMIN LOGIN -->
+<div id="adminLogin" style="display:none;position:fixed;inset:0;background:black;z-index:9999;justify-content:center;align-items:center;">
+  <div style="background:#111;padding:30px;border:2px solid red;text-align:center;">
+    <h2 style="color:red;">Admin Login</h2>
+    <input id="adminUser" placeholder="Username" style="margin:10px;padding:10px;"><br>
+    <input id="adminPass" type="password" placeholder="Password" style="margin:10px;padding:10px;"><br>
+    <button onclick="loginAdmin()" style="padding:10px 20px;background:red;border:none;color:white;">Login</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;position:fixed;inset:0;background:black;z-index:9999;padding:30px;color:white;overflow:auto;">
+  <h1 style="color:red;">ADMIN PANEL</h1>
+
+  <button onclick="viewData()" style="padding:12px;margin:10px;background:red;border:none;color:white;">View Data</button>
+  <button onclick="clearSheets()" style="padding:12px;margin:10px;background:red;border:none;color:white;">Clear Google Sheets</button>
+  <button onclick="closeAdmin()" style="padding:12px;margin:10px;background:#333;border:none;color:white;">Close</button>
+
+  <div id="dataBox" style="margin-top:20px;"></div>
+</div>
+
+<script>
+// ===== TRIPLE CLICK TITLE =====
+let clicks = 0;
+const title = document.querySelector("h1");
+
+title.addEventListener("click", () => {
+  clicks++;
+  setTimeout(() => clicks = 0, 800);
+  if (clicks === 3) {
+    document.getElementById("adminLogin").style.display = "flex";
+  }
+});
+
+// ===== LOGIN =====
+function loginAdmin(){
+  const u = document.getElementById("adminUser").value;
+  const p = document.getElementById("adminPass").value;
+
+  if(u==="sharvesh" && p==="00010698"){
+    document.getElementById("adminLogin").style.display="none";
+    document.getElementById("adminPanel").style.display="block";
+  } else {
+    alert("Wrong credentials");
+  }
+}
+
+// ===== CLOSE =====
+function closeAdmin(){
+  document.getElementById("adminPanel").style.display="none";
+}
+
+// ===== VIEW DATA =====
+function viewData(){
+  fetch("https://sheetdb.io/api/v1/jvdju561wmg80")
+  .then(res=>res.json())
+  .then(data=>{
+    let html="<h3>Submissions:</h3>";
+    data.forEach(row=>{
+      html+=`<div style="border-bottom:1px solid #444;padding:10px;">
+        <b>URL:</b> ${row.url || ""}<br>
+        <b>Prefs:</b> ${row.preferences || ""}<br>
+        <b>Name:</b> ${row.name || ""}<br>
+        <b>Email:</b> ${row.email || ""}
+      </div>`;
+    });
+    document.getElementById("dataBox").innerHTML=html;
+  });
+}
+
+// ===== CLEAR SHEETS =====
+function clearSheets(){
+  if(!confirm("Delete ALL rows?")) return;
+
+  fetch("https://sheetdb.io/api/v1/jvdju561wmg80/all",{
+    method:"DELETE"
+  })
+  .then(res=>{
+    if(res.ok){
+      alert("Sheet cleared (headers kept)");
+      document.getElementById("dataBox").innerHTML="";
+    } else {
+      alert("Failed");
+    }
+  })
+  .catch(()=>alert("Error"));
+}
+</script>
 </body>
 </html>
